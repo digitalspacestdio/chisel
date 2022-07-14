@@ -103,11 +103,11 @@ func NewServer(c *Config) (*Server, error) {
 		server.reverseProxy = httputil.NewSingleHostReverseProxy(u)
 		//always use proxy host
 		server.reverseProxy.Director = func(r *http.Request) {
-			r.Header.Add("X-Forwarded-Host", r.Host)
+                        r.Header.Add("X-Forwarded-Host", r.Host)
 			//enforce origin, keep path
 			r.URL.Scheme = u.Scheme
 			r.URL.Host = u.Host
-			r.Host = u.Host
+			r.Host = r.Header.Get("X-Forwarded-Host")
 		}
 	}
 	//print when reverse tunnelling is enabled
